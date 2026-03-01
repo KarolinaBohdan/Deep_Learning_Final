@@ -1,0 +1,55 @@
+import pandas as pd
+import numpy as np
+import joblib
+
+# ----------------------------
+# Load dataset
+# ----------------------------
+
+df = pd.read_parquet("patents_50k_green_1.parquet")
+pool_df = df[df["split"] == "pool_unlabeled"].reset_index(drop=True)
+
+# ----------------------------
+# Load embeddings + classifier
+# ----------------------------
+
+X_pool = np.load("X_pool.npy")
+clf = joblib.load("baseline_logreg.joblib")
+
+# ----------------------------
+# Compute probabilities
+# ----------------------------
+
+p_green = clf.predict_proba(X_pool)[:, 1]
+
+# Uncertainty score: u = 1 - 2|p - 0.5|
+u = 1 - 2 * np.abs(p_green - 0.5)
+
+pool_df["p_green"] = p_green
+pool_df["u"] = u
+
+# ----------------------------
+# Select top 100 most uncertain
+# ----------------------------
+
+top100 = (
+    pool_df.sort_values("u", ascending=False)
+    .head(100)
+    .copy()
+)
+
+# Keep required columns
+top100 = top100[["id", "text", "p_green", "u"]]
+top100 = top100.rename(columns={"id": "doc_id"})
+
+# Add empty HITL columns
+top100["llm_green_suggested"] = ""
+top100["llm_confidence"] = ""
+top100["llm_rationale"] = ""
+top100["is_green_human"] = ""
+
+# Save CSV
+top100.to_csv("hitl_green_100.csv", index=False)
+
+print("Saved hitl_green_100.csv")
+print(top100.head())
