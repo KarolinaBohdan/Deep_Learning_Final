@@ -1,0 +1,27 @@
+EVAL_SILVER
+TRAIN_SPLIT=train_silver (label=is_green_silver) + HITL(label=is_green_human_2)
+EVAL_SPLIT=eval_silver (label=is_green_silver)
+
+eval_loss: 0.416932612657547
+eval_accuracy: 0.8116
+eval_precision: 0.8020186335403726
+eval_recall: 0.8270616493194556
+eval_f1: 0.8143476547102877
+eval_runtime: 77.4966
+eval_samples_per_second: 129.038
+eval_steps_per_second: 8.065
+epoch: 1.0
+
+CONFUSION_MATRIX (rows=true 0/1, cols=pred 0/1)
+[[3984 1020]
+ [ 864 4132]]
+
+CLASSIFICATION_REPORT
+              precision    recall  f1-score   support
+
+           0     0.8218    0.7962    0.8088      5004
+           1     0.8020    0.8271    0.8143      4996
+
+    accuracy                         0.8116     10000
+   macro avg     0.8119    0.8116    0.8116     10000
+weighted avg     0.8119    0.8116    0.8116     10000
