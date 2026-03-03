@@ -1,4 +1,3 @@
-# qlora_train_mistral_ai_lab.py
 # ------------------------------------------------------------
 # QLoRA training (Mistral-7B-Instruct) on AI-Lab GPU using:
 #  - patents_50k_green.parquet (train_silver split + is_green_silver labels)
