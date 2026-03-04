@@ -14,12 +14,12 @@ This project implements an end-to-end pipeline for classifying patent claims as 
 
 ### Key Achievements
 
-| Method | Accuracy | F1 Score | Key Advantage |
+| Method | F1 Score | Key Advantage |
 |--------|----------|----------|---|
-| Baseline (LogReg + Frozen) | 81.0% | 0.810 | Fast, lightweight |
-| Fine-tuned PatentSBERTa | **83.5%** | **0.835** | Best accuracy-speed tradeoff |
-| QLoRA Mistral | 80.5% | 0.805 | JSON output, memory efficient |
-| Multi-Agent Debate | **84.5%** | **0.845** | Most interpretable, robust |
+| Baseline (LogReg + Frozen) | 81.0% | 0.777 | Fast, lightweight |
+| Fine-tuned PatentSBERTa | **83.5%** | **0.808** | Best accuracy-speed tradeoff |
+| QLoRA Mistral | 80.5% | 0.811 | JSON output, memory efficient |
+| Multi-Agent Debate | **84.5%** | **0.867** | Most interpretable, robust |
 
 ---
 
@@ -42,8 +42,6 @@ This project implements an end-to-end pipeline for classifying patent claims as 
 
 - **Python 3.8+**
 - **CUDA 11.8+** (for GPU acceleration)
-- **16GB+ RAM** (for model loading)
-- **50GB+ disk space** (for model checkpoints)
 
 ### Setup
 
@@ -344,12 +342,12 @@ Patent Claim
 
 ### Performance Comparison
 
-| Method | Accuracy | F1 | Memory | Speed | Best For |
-|--------|----------|-----|--------|-------|----------|
-| Baseline (LogReg) | 81.0% | 0.810 | 0.5GB | ⚡⚡⚡ | Quick inference |
-| Fine-tuned PatentSBERTa | **83.5%** | **0.835** | 1.2GB | ⚡⚡ | **Production** |
-| QLoRA Mistral | 80.5% | 0.805 | 3.5GB | ⚡ | JSON output |
-| Multi-Agent Debate | **84.5%** | **0.845** | 16GB | 🐢 | **Interpretability** |
+| Method | F1 | Memory | Speed | Best For |
+|--------|-----|--------|-------|----------|
+| Baseline (LogReg) | 0.810 | 0.5GB | ⚡⚡⚡ | Quick inference |
+| Fine-tuned PatentSBERTa | **0.835** | 1.2GB | ⚡⚡ | **Production** |
+| QLoRA Mistral | 0.805 | 3.5GB | ⚡ | JSON output |
+| Multi-Agent Debate | **0.845** | 16GB | 🐢 | **Interpretability** |
 
 ---
 
