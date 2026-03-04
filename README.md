@@ -98,7 +98,6 @@ Training setup:
 - Method: **QLoRA adapters**
 - Training subset: **10,000 randomly sampled patents**
 - GPU: **AAU AI Lab cluster**
-- Training time: ~3 hours
 
 The fine-tuned adapter allows the model to better understand:
 
