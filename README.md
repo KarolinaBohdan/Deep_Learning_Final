@@ -179,21 +179,32 @@ Claims that only use vague language such as *efficient*, *eco-friendly*, or *sus
 # Repository Structure
 
 ```
-Deep_Learning_Final
+Deep_Learning_Final/
 │
-├── A2_partB_uncertainty
-├── A2_partC_llm_local.py
-├── A2_partD_finetune.py
+├── Assignment2_PartA.ipynb              # Data exploration and split
+├── Assignment2_baseline_partA.py        # Baseline classifier
+├── A2_partB_uncertainty                 # Uncertainty sampling
+├── A2_partC_llm_local.py                # LLM labeling of uncertain samples
+├── A2_partD_finetune.py                 # Fine-tuning experiments
 │
-├── A3_qlora_finetuning.py
-├── A3_qlora_inference_.py
+├── A3_qlora_finetuning.py               # QLoRA fine-tuning script
+├── A3_qlora_inference_.py               # Inference using fine-tuned model
 │
-├── mas_final.py
+├── mas_final.py                         # Multi-Agent System pipeline
 │
-├── hitl_green_100.csv
-├── MAS_final_labels.csv
+├── hitl_green_100.csv                   # Human-in-the-loop labeled dataset
+├── MAS_final_labels.csv                 # Final MAS predictions
+│
+├── Assignment1.ipynb                 # earlier experiments
+│
+├── *_results*                           # training / evaluation outputs
+├── *_metrics*                           # saved evaluation metrics
 │
 └── README.md
+```
+
+Note: The repository also contains intermediate experiment files, logs, and result outputs generated during training and evaluation.
+
 ```
 
 ---
