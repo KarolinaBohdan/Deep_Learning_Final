@@ -216,7 +216,7 @@ Output: Baseline metrics + model checkpoint
 ```
 
 **Run**: `python Assigment2_baseline_partA.py`  
-**Results**: 81% accuracy, 0.810 F1 score
+**Results**: 0.777 F1 score
 
 ### Phase 3: Uncertainty & LLM Labeling
 ```
@@ -245,7 +245,7 @@ Evaluate on eval_silver
 ```
 
 **Run**: `python A2_partD_finetune.py`  
-**Results**: 83.5% accuracy, 0.835 F1 score
+**Results**: 0.808 F1 score
 
 ### Phase 5: QLoRA Fine-tuning
 ```
@@ -267,6 +267,7 @@ python A3_qlora_finetuning.py \
 ```
 
 **Run Inference**: `python A3_qlora_inference_.py --adapter_dir qlora_mistral_adapter_json`
+**Results**: 0.811 F1 score
 
 ### Phase 6: Multi-Agent Debate System
 ```
@@ -291,7 +292,7 @@ python mas_final.py \
   --output mas_debate_results.csv
 ```
 
-**Time**: ~4-6 hours | **Memory**: ~16GB | **Results**: 84.5% accuracy, 0.845 F1 score
+**Results**: 0.867 F1 score
 
 ---
 
@@ -340,10 +341,10 @@ Patent Claim
 
 | Method | F1  | Speed | Best For |
 |--------|-----|--------|-------|----------|
-| Baseline (LogReg) | 0.810 | ⚡⚡⚡ | Quick inference |
-| Fine-tuned PatentSBERTa | **0.835** | ⚡⚡ | **Production** |
-| QLoRA Mistral | 0.805 | ⚡ | JSON output |
-| Multi-Agent Debate | **0.845** | 🐢 | **Interpretability** |
+| Baseline (LogReg) | 0.777 | ⚡⚡⚡ | Quick inference |
+| Fine-tuned PatentSBERTa | **0.808** | ⚡⚡ | **Production** |
+| QLoRA Mistral | 0.811 | ⚡ | JSON output |
+| Multi-Agent Debate | **0.867** | 🐢 | **Interpretability** |
 
 ---
 
