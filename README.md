@@ -70,7 +70,7 @@ pip install -r requirements.txt
 # PatentSBERTa auto-downloads
 python -c "from transformers import AutoModel; AutoModel.from_pretrained('AI-Growth-Lab/PatentSBERTa')"
 
-# Mistral-7B-Instruct (~14GB)
+# Mistral-7B-Instruct
 python -c "from transformers import AutoModel; AutoModel.from_pretrained('mistralai/Mistral-7B-Instruct-v0.2')"
 ```
 
@@ -245,8 +245,7 @@ Evaluate on eval_silver
 ```
 
 **Run**: `python A2_partD_finetune.py`  
-**Time**: ~30-45 minutes on A100 GPU  
-**Results**: 83.5% accuracy, 0.835 F1 score (+2.5% improvement)
+**Results**: 83.5% accuracy, 0.835 F1 score
 
 ### Phase 5: QLoRA Fine-tuning
 ```
@@ -266,9 +265,6 @@ python A3_qlora_finetuning.py \
   --num_train_epochs 3 \
   --per_device_train_batch_size 4
 ```
-
-**Time**: ~2-3 hours on A100 GPU  
-**Memory**: ~3.5GB (vs 14GB for full model)
 
 **Run Inference**: `python A3_qlora_inference_.py --adapter_dir qlora_mistral_adapter_json`
 
@@ -342,12 +338,12 @@ Patent Claim
 
 ### Performance Comparison
 
-| Method | F1 | Memory | Speed | Best For |
+| Method | F1  | Speed | Best For |
 |--------|-----|--------|-------|----------|
-| Baseline (LogReg) | 0.810 | 0.5GB | ⚡⚡⚡ | Quick inference |
-| Fine-tuned PatentSBERTa | **0.835** | 1.2GB | ⚡⚡ | **Production** |
-| QLoRA Mistral | 0.805 | 3.5GB | ⚡ | JSON output |
-| Multi-Agent Debate | **0.845** | 16GB | 🐢 | **Interpretability** |
+| Baseline (LogReg) | 0.810 | ⚡⚡⚡ | Quick inference |
+| Fine-tuned PatentSBERTa | **0.835** | ⚡⚡ | **Production** |
+| QLoRA Mistral | 0.805 | ⚡ | JSON output |
+| Multi-Agent Debate | **0.845** | 🐢 | **Interpretability** |
 
 ---
 
