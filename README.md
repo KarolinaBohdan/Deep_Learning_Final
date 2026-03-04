@@ -339,12 +339,13 @@ Patent Claim
 
 ### Performance Comparison
 
-| Method | F1  | Speed | Best For |
-|--------|-----|--------|-------|----------|
-| Baseline (LogReg) | 0.777 | ⚡⚡⚡ | Quick inference |
-| Fine-tuned PatentSBERTa | **0.808** | ⚡⚡ | **Production** |
-| QLoRA Mistral | 0.811 | ⚡ | JSON output |
-| Multi-Agent Debate | **0.867** | 🐢 | **Interpretability** |
+| Method | F1 Score | Key Advantage |
+|--------|----------|---|
+| Baseline (LogReg + Frozen) | 0.777 | Fast, lightweight |
+| Fine-tuned PatentSBERTa | **0.808** | Best accuracy-speed tradeoff |
+| QLoRA Mistral | 0.811 | JSON output, memory efficient |
+| Multi-Agent Debate | **0.867** | Most interpretable, robust |
+
 
 ---
 
