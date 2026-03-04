@@ -1,0 +1,28 @@
+MODEL      : AI-Growth-Lab/PatentSBERTa
+LABEL_COL  : is_green_human_3
+TRAIN_ROWS : 85
+EVAL_ROWS  : 15
+
+eval_loss: 0.39733073115348816
+eval_accuracy: 0.8666666666666667
+eval_precision: 0.0
+eval_recall: 0.0
+eval_f1: 0.0
+eval_runtime: 0.1631
+eval_samples_per_second: 91.99
+eval_steps_per_second: 6.133
+epoch: 3.0
+
+CONFUSION MATRIX (rows=true 0/1, cols=pred 0/1)
+[[13  0]
+ [ 2  0]]
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+           0     0.8667    1.0000    0.9286        13
+           1     0.0000    0.0000    0.0000         2
+
+    accuracy                         0.8667        15
+   macro avg     0.4333    0.5000    0.4643        15
+weighted avg     0.7511    0.8667    0.8048        15

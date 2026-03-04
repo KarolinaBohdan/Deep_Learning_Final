@@ -1,0 +1,161 @@
+import os
+import numpy as np
+import pandas as pd
+import torch
+
+from datasets import Dataset
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer,
+    DataCollatorWithPadding,
+    set_seed,
+)
+from sklearn.metrics import (
+    accuracy_score,
+    precision_recall_fscore_support,
+    confusion_matrix,
+    classification_report,
+)
+from sklearn.model_selection import train_test_split
+
+# ── CONFIG ─────────────────────────────────────────────────────────────────────
+CSV_PATH   = "MAS_final_labels.csv"
+MODEL_NAME = "AI-Growth-Lab/PatentSBERTa"
+
+TEXT_COL  = "text"
+LABEL_COL = "is_green_human_3"   # ← human-3 labels
+
+MAX_LEN    = 256
+EPOCHS     = 3
+LR         = 2e-5
+BATCH_SIZE = 16
+SEED       = 42
+TEST_SIZE  = 0.15   # 15 % held-out eval split
+
+OUT_DIR      = "patentsberta_finetuned_human3"
+METRICS_PATH = os.path.join(OUT_DIR, "final_metrics.txt")
+
+set_seed(SEED)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+# ── LOAD & CLEAN ───────────────────────────────────────────────────────────────
+print("Loading CSV …")
+df = pd.read_csv(CSV_PATH)
+
+required = {TEXT_COL, LABEL_COL}
+missing  = required - set(df.columns)
+if missing:
+    raise ValueError(f"CSV missing columns: {missing}. Found: {df.columns.tolist()}")
+
+df = df[[TEXT_COL, LABEL_COL]].copy()
+df[TEXT_COL]  = df[TEXT_COL].fillna("").astype(str)
+df[LABEL_COL] = pd.to_numeric(df[LABEL_COL], errors="coerce")
+df = df[df[LABEL_COL].isin([0, 1])].copy()
+df[LABEL_COL] = df[LABEL_COL].astype(int)
+df = df.rename(columns={LABEL_COL: "label"})
+
+print(f"Total valid rows: {len(df)}")
+print("Label distribution:\n", df["label"].value_counts().to_string())
+
+# ── TRAIN / EVAL SPLIT ─────────────────────────────────────────────────────────
+train_df, eval_df = train_test_split(
+    df,
+    test_size=TEST_SIZE,
+    random_state=SEED,
+    stratify=df["label"],   # keep class balance in both splits
+)
+print(f"\nTrain rows : {len(train_df)}")
+print(f"Eval  rows : {len(eval_df)}")
+print("Train label counts:\n", train_df["label"].value_counts().to_string())
+print("Eval  label counts:\n", eval_df["label"].value_counts().to_string())
+
+# ── TOKENISE ───────────────────────────────────────────────────────────────────
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+collator  = DataCollatorWithPadding(tokenizer=tokenizer)
+
+def make_ds(texts, labels):
+    ds = Dataset.from_dict({"text": list(texts), "labels": [int(x) for x in labels]})
+    def tok(batch):
+        return tokenizer(batch["text"], truncation=True, max_length=MAX_LEN)
+    return ds.map(tok, batched=True, remove_columns=["text"])
+
+train_ds = make_ds(train_df["text"], train_df["label"])
+eval_ds  = make_ds(eval_df["text"],  eval_df["label"])
+
+# ── MODEL ──────────────────────────────────────────────────────────────────────
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=2)
+
+# ── METRICS ────────────────────────────────────────────────────────────────────
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+    preds = np.argmax(logits, axis=-1)
+    acc = accuracy_score(labels, preds)
+    p, r, f1, _ = precision_recall_fscore_support(
+        labels, preds, average="binary", zero_division=0
+    )
+    return {"accuracy": float(acc), "precision": float(p), "recall": float(r), "f1": float(f1)}
+
+# ── TRAINING ARGS ──────────────────────────────────────────────────────────────
+use_bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
+
+args = TrainingArguments(
+    output_dir                  = OUT_DIR,
+    num_train_epochs            = EPOCHS,
+    learning_rate               = LR,
+    per_device_train_batch_size = BATCH_SIZE,
+    per_device_eval_batch_size  = BATCH_SIZE,
+    logging_steps               = 50,
+    report_to                   = "none",
+    seed                        = SEED,
+    bf16                        = use_bf16,
+    fp16                        = torch.cuda.is_available() and not use_bf16,
+    save_total_limit            = 2,
+)
+
+# ── TRAIN ──────────────────────────────────────────────────────────────────────
+trainer = Trainer(
+    model           = model,
+    args            = args,
+    train_dataset   = train_ds,
+    data_collator   = collator,
+    compute_metrics = compute_metrics,
+)
+
+print("\nStarting training …")
+trainer.train()
+
+# ── EVALUATE ───────────────────────────────────────────────────────────────────
+print("\nEvaluating …")
+eval_metrics = trainer.evaluate(eval_dataset=eval_ds)
+
+pred   = trainer.predict(eval_ds)
+y_true = pred.label_ids
+y_pred = np.argmax(pred.predictions, axis=-1)
+
+cm     = confusion_matrix(y_true, y_pred, labels=[0, 1])
+report = classification_report(y_true, y_pred, digits=4)
+
+# ── SAVE METRICS ───────────────────────────────────────────────────────────────
+with open(METRICS_PATH, "w") as f:
+    f.write(f"MODEL      : {MODEL_NAME}\n")
+    f.write(f"LABEL_COL  : {LABEL_COL}\n")
+    f.write(f"TRAIN_ROWS : {len(train_df)}\n")
+    f.write(f"EVAL_ROWS  : {len(eval_df)}\n\n")
+    for k, v in eval_metrics.items():
+        f.write(f"{k}: {v}\n")
+    f.write("\nCONFUSION MATRIX (rows=true 0/1, cols=pred 0/1)\n")
+    f.write(str(cm) + "\n")
+    f.write("\nCLASSIFICATION REPORT\n")
+    f.write(report)
+
+print("\nMetrics:\n", eval_metrics)
+print("\nConfusion matrix:\n", cm)
+print("\nClassification report:\n", report)
+
+# ── SAVE MODEL ─────────────────────────────────────────────────────────────────
+trainer.save_model(OUT_DIR)
+tokenizer.save_pretrained(OUT_DIR)
+print(f"\nModel saved  → {OUT_DIR}")
+print(f"Metrics saved → {METRICS_PATH}")
