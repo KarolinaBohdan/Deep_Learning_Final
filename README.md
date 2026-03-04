@@ -47,6 +47,3 @@ python predict.py --input_file path/to/input_data
 
 ## Contributing
 If you would like to contribute to this project, please fork the repository and submit a pull request. Provide a clear description of your changes.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
