@@ -15,11 +15,11 @@ This project implements an end-to-end pipeline for classifying patent claims as 
 ### Key Achievements
 
 | Method | F1 Score | Key Advantage |
-|--------|----------|----------|---|
-| Baseline (LogReg + Frozen) | 81.0% | 0.777 | Fast, lightweight |
-| Fine-tuned PatentSBERTa | **83.5%** | **0.808** | Best accuracy-speed tradeoff |
-| QLoRA Mistral | 80.5% | 0.811 | JSON output, memory efficient |
-| Multi-Agent Debate | **84.5%** | **0.867** | Most interpretable, robust |
+|--------|----------|---|
+| Baseline (LogReg + Frozen) | 0.777 | Fast, lightweight |
+| Fine-tuned PatentSBERTa | **0.808** | Best accuracy-speed tradeoff |
+| QLoRA Mistral | 0.811 | JSON output, memory efficient |
+| Multi-Agent Debate | **0.867** | Most interpretable, robust |
 
 ---
 
