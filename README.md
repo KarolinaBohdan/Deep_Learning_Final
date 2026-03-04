@@ -195,16 +195,12 @@ Deep_Learning_Final/
 ├── hitl_green_100.csv                   # Human-in-the-loop labeled dataset
 ├── MAS_final_labels.csv                 # Final MAS predictions
 │
-├── Assignment1.ipynb                 # earlier experiments
+├── Assignment1.ipynb                    # first assignment
 │
 ├── *_results*                           # training / evaluation outputs
 ├── *_metrics*                           # saved evaluation metrics
 │
 └── README.md
-```
-
-Note: The repository also contains intermediate experiment files, logs, and result outputs generated during training and evaluation.
-
 ```
 
 ---
