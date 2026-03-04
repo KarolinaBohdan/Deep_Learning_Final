@@ -351,38 +351,6 @@ Patent Claim
 | QLoRA Mistral | 80.5% | 0.805 | 3.5GB | ⚡ | JSON output |
 | Multi-Agent Debate | **84.5%** | **0.845** | 16GB | 🐢 | **Interpretability** |
 
-### Baseline Performance
-```
-Dataset: eval_silver (10,000 samples)
-Model: PatentSBERTa + Logistic Regression
-
-              precision    recall  f1-score
-    Non-Green       0.82      0.79      0.80
-    Green           0.80      0.83      0.81
-    Accuracy                          0.81
-```
-
-### Fine-tuned PatentSBERTa
-```
-Dataset: eval_silver (10,000 samples)
-
-              precision    recall  f1-score
-    Non-Green       0.84      0.82      0.83
-    Green           0.83      0.85      0.84
-    Accuracy                          0.835
-```
-
-### Multi-Agent Debate System
-```
-Dataset: eval_silver (10,000 samples)
-
-              precision    recall  f1-score
-    Non-Green       0.85      0.84      0.845
-    Green           0.84      0.85      0.845
-    Accuracy                          0.845
-    F1 Improvement (vs baseline)      +3.5%
-```
-
 ---
 
 ## 📖 Usage Guide
